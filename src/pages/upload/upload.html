@@ -1,0 +1,25 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Upload</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <button ion-button icon-start block outline color="dark" (click)="getImage(0)">
+    <ion-icon name="camera"></ion-icon>
+    Tirar foto
+  </button>
+
+  <button ion-button icon-start block outline color="dark" (click)="getImage(1)">
+    <ion-icon name="folder"></ion-icon>
+      Carregar Imagem
+  </button>
+
+  <ion-card>
+      <img src="{{imageURI}}" *ngIf="imageURI" alt="Imagem"/>
+  </ion-card>
+  
+  <button ion-button full large (click)="uploadFile()">Enviar</button>
+</ion-content>
