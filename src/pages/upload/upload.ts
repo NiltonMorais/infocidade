@@ -38,6 +38,7 @@ export class UploadPage {
       //this.imageURI = imageData;
       this.imageURI = base64Image;
     }, (err) => {
+      console.log("erro no getPicture()");
       console.log(err);
       this.presentToast(err);
     });
@@ -58,13 +59,14 @@ export class UploadPage {
       headers: {}
     }
   
-    fileTransfer.upload(this.imageURI, 'http://192.168.0.7:8080/api/uploadImage', options)
+    fileTransfer.upload(this.imageURI, 'http://127.0.0.1:8000/api/teste', options)
       .then((data) => {
       console.log(data+" Uploaded Successfully");
       this.imageFileName = "http://192.168.0.7:8080/static/images/ionicfile.jpg"
       loader.dismiss();
       this.presentToast("Image uploaded successfully");
     }, (err) => {
+      console.log("erro no upload()");
       console.log(err);
       loader.dismiss();
       this.presentToast(err);
