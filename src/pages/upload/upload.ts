@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Http } from '../../../node_modules/@angular/http';
 
 @IonicPage()
 @Component({
@@ -12,16 +13,17 @@ export class UploadPage {
 
   imageURI:any;
   imageFileName:any;
+  ID_TIPO:any;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public http: Http,
     private transfer: FileTransfer,
     private camera: Camera,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController) {
 
-    let id = navParams.get('id');
-    console.log("id: "+id);
+    this.ID_TIPO = navParams.get('id');
   }
 
   getImage(type) {
@@ -34,6 +36,7 @@ export class UploadPage {
   }
   
     this.camera.getPicture(options).then((imageData) => {
+      console.log(imageData);
       let base64Image = 'data:image/jpeg;base64,' + imageData;
       //this.imageURI = imageData;
       this.imageURI = base64Image;
@@ -48,13 +51,14 @@ export class UploadPage {
     let loader = this.loadingCtrl.create({
       content: "Uploading..."
     });
-    loader.present();
+    loader.present();/*
     const fileTransfer: FileTransferObject = this.transfer.create();
   
     let options: FileUploadOptions = {
-      fileKey: 'ionicfile',
-      fileName: 'ionicfile',
+      fileKey: 'imagem',
+      fileName: 'imagem.jpeg',
       chunkedMode: false,
+      httpMethod: "POST",
       mimeType: "image/jpeg",
       headers: {}
     }
@@ -70,7 +74,23 @@ export class UploadPage {
       console.log(err);
       loader.dismiss();
       this.presentToast(err);
-    });
+    }); */
+
+    let data = {
+      ID_TIPO: this.ID_TIPO,
+      image: this.imageURI,
+    };
+    
+    this.http.post('http://127.0.0.1:8000/api/teste', data).subscribe(
+      (result) => {
+        console.log("success!");
+      },
+      (err) => {
+        console.log(JSON.stringify(err));
+      }
+    );
+
+    loader.dismiss();
   }
 
   presentToast(msg) {
