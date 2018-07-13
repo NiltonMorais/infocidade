@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { Http } from '../../../node_modules/@angular/http';
+import { Http , Headers, RequestOptions} from '../../../node_modules/@angular/http';
 
 @IonicPage()
 @Component({
@@ -36,10 +36,9 @@ export class UploadPage {
   }
   
     this.camera.getPicture(options).then((imageData) => {
-      console.log(imageData);
       let base64Image = 'data:image/jpeg;base64,' + imageData;
-      //this.imageURI = imageData;
-      this.imageURI = base64Image;
+      this.imageURI = imageData;
+      //this.imageURI = base64Image;
     }, (err) => {
       console.log("erro no getPicture()");
       console.log(err);
@@ -77,11 +76,21 @@ export class UploadPage {
     }); */
 
     let data = {
-      ID_TIPO: this.ID_TIPO,
-      image: this.imageURI,
+      ID_TIPOIMAGEM: this.ID_TIPO,
+      IMAGEM: this.imageURI,
     };
     
-    this.http.post('http://127.0.0.1:8000/api/teste', data).subscribe(
+    let body = new FormData();
+    body.append('ID_TIPOIMAGEM', this.ID_TIPO);
+    body.append('IMAGEM', this.imageURI);
+    body.append('data',this.imageURI, 'imagem.jpg');
+
+    let headers = new Headers();
+    headers.append('Content-Type', 'multipart/form-data')
+
+    //this.http.post('http://127.0.0.1:8000/api/teste', data).subscribe(
+    //this.http.post('http://localhost:54837/api/pesquisa', body, {headers: headers}).subscribe(
+      this.http.post('http://189.16.249.117/InfocidadeAPI/InfocidadeAPI/api/pesquisa', body, {headers: headers}).subscribe(
       (result) => {
         console.log("success!");
       },
